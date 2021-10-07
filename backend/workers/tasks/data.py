@@ -293,6 +293,9 @@ def import_annotations(task_id, dataset_id, coco_json):
         category_ids = categories_by_image[image_id]
         all_category_ids = list(image_model.category_ids)
         all_category_ids += category_ids
+        
+        for item in AnnotationModel.objects(Q(image_id=image_model.id) & Q(deleted=False)):
+            all_category_ids.append(item.category_id)
 
         num_annotations = AnnotationModel.objects(
             Q(image_id=image_id) & Q(deleted=False) &
